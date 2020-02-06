@@ -306,7 +306,7 @@ func (p *GitHubProvider) GetEmailAddress(s *sessions.SessionState) (string, erro
 	}
 
 	for _, email := range emails {
-		if email.Primary && email.Verified {
+		if email.Primary {
 			return email.Email, nil
 		}
 	}
@@ -316,44 +316,45 @@ func (p *GitHubProvider) GetEmailAddress(s *sessions.SessionState) (string, erro
 
 // GetUserName returns the Account user name
 func (p *GitHubProvider) GetUserName(s *sessions.SessionState) (string, error) {
-	var user struct {
-		Login string `json:"login"`
-		Email string `json:"email"`
-	}
+	return "", nil
+	// var user struct {
+	// 	Login string `json:"login"`
+	// 	Email string `json:"email"`
+	// }
 
-	endpoint := &url.URL{
-		Scheme: p.ValidateURL.Scheme,
-		Host:   p.ValidateURL.Host,
-		Path:   path.Join(p.ValidateURL.Path, "/user"),
-	}
+	// endpoint := &url.URL{
+	// 	Scheme: p.ValidateURL.Scheme,
+	// 	Host:   p.ValidateURL.Host,
+	// 	Path:   path.Join(p.ValidateURL.Path, "/user"),
+	// }
 
-	req, err := http.NewRequest("GET", endpoint.String(), nil)
-	if err != nil {
-		return "", fmt.Errorf("could not create new GET request: %v", err)
-	}
+	// req, err := http.NewRequest("GET", endpoint.String(), nil)
+	// if err != nil {
+	// 	return "", fmt.Errorf("could not create new GET request: %v", err)
+	// }
 
-	req.Header.Set("Authorization", fmt.Sprintf("token %s", s.AccessToken))
-	resp, err := http.DefaultClient.Do(req)
-	if err != nil {
-		return "", err
-	}
+	// req.Header.Set("Authorization", fmt.Sprintf("token %s", s.AccessToken))
+	// resp, err := http.DefaultClient.Do(req)
+	// if err != nil {
+	// 	return "", err
+	// }
 
-	body, err := ioutil.ReadAll(resp.Body)
-	defer resp.Body.Close()
-	if err != nil {
-		return "", err
-	}
+	// body, err := ioutil.ReadAll(resp.Body)
+	// defer resp.Body.Close()
+	// if err != nil {
+	// 	return "", err
+	// }
 
-	if resp.StatusCode != 200 {
-		return "", fmt.Errorf("got %d from %q %s",
-			resp.StatusCode, endpoint.String(), body)
-	}
+	// if resp.StatusCode != 200 {
+	// 	return "", fmt.Errorf("got %d from %q %s",
+	// 		resp.StatusCode, endpoint.String(), body)
+	// }
 
-	logger.Printf("got %d from %q %s", resp.StatusCode, endpoint.String(), body)
+	// logger.Printf("got %d from %q %s", resp.StatusCode, endpoint.String(), body)
 
-	if err := json.Unmarshal(body, &user); err != nil {
-		return "", fmt.Errorf("%s unmarshaling %s", err, body)
-	}
+	// if err := json.Unmarshal(body, &user); err != nil {
+	// 	return "", fmt.Errorf("%s unmarshaling %s", err, body)
+	// }
 
-	return user.Login, nil
+	// return user.Login, nil
 }

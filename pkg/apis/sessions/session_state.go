@@ -237,7 +237,7 @@ func DecodeSessionState(v string, c *encryption.Cipher) (*SessionState, error) {
 		}
 	}
 	if ss.User == "" {
-		ss.User = ss.Email
+		ss.User = strings.Split(ss.Email, "@")[0]
 	}
 	return ss, nil
 }
